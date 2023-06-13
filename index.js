@@ -51,6 +51,14 @@ app.get('/', (req, res)=>{
     res.send('GlobeLingo is running')
 })
 
+// class collection
+app.post('/class', async(req, res) =>{
+  const myClass = req.body;
+  console.log(myClass);
+  const result = await AllClassesCollection.insertOne(myClass);
+  res.send(result)
+})
+
 app.listen(port, () => {
     console.log(`GlobeLingo is running on port ${port} `);
 })
