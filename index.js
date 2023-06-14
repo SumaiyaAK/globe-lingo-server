@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 require('dotenv').config();
-const port =  process.env.PORT || 5000
+const port = process.env.PORT || 5000
 
 // middleware
 app.use(cors());
@@ -28,11 +28,20 @@ async function run() {
     // await client.connect();
 
 
-    const AllClassesCollection =  client.db("GlobeLingoDB").collection("AllClasses")
+    const AllClassesCollection = client.db("GlobeLingoDB").collection("AllClasses")
+    const classCollection = client.db("GlobeLingoDB").collection("class")
 
-    app.get('/AllClasses', async(req, res)=>{
-        const result = await AllClassesCollection.find().toArray();
-        res.send(result)
+    app.get('/AllClasses', async (req, res) => {
+      const result = await AllClassesCollection.find().toArray();
+      res.send(result)
+    })
+
+    // class collection
+    app.post('/class', async (req, res) => {
+      const myClass = req.body;
+      console.log(myClass);
+      const result = await classCollection.insertOne(myClass);
+      res.send(result)
     })
 
     // Send a ping to confirm a successful connection
@@ -47,18 +56,12 @@ run().catch(console.dir);
 
 
 
-app.get('/', (req, res)=>{
-    res.send('GlobeLingo is running')
+app.get('/', (req, res) => {
+  res.send('GlobeLingo is running')
 })
 
-// class collection
-app.post('/class', async(req, res) =>{
-  const myClass = req.body;
-  console.log(myClass);
-  const result = await AllClassesCollection.insertOne(myClass);
-  res.send(result)
-})
+
 
 app.listen(port, () => {
-    console.log(`GlobeLingo is running on port ${port} `);
+  console.log(`GlobeLingo is running on port ${port} `);
 })
